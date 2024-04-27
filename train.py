@@ -15,15 +15,28 @@ from models import Transformer
 # 检查GPU是否可用
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-# 创建数据集和数据加载器
-dataset = MyDataset(csv_file='dataset/THUNews/5_5000/train.csv')
+# 创建训练数据加载器
 train_dataloader = MyDataLoader(csv_file='dataset/THUNews/5_5000/train.csv', batch_size=4, max_length=256)\
     .get_data_loader()
+
+# 创建验证数据加载器
+valid_dataset = MyDataset(csv_file='dataset/THUNews/5_5000/dev.csv')
 valid_dataloader = MyDataLoader(csv_file='dataset/THUNews/5_5000/dev.csv', batch_size=4, max_length=256)\
     .get_data_loader()
-test_dataloader = MyDataLoader(csv_file='dataset/THUNews/5_5000/test.csv', batch_size=4, max_length=256)\
-    .get_data_loader()
 
+# 创建测试数据加载器
+# test_dataset = MyDataset(csv_file='dataset/THUNews/5_5000/test.csv')
+# test_dataloader = MyDataLoader(csv_file='dataset/THUNews/5_5000/test.csv', batch_size=4, max_length=256)\
+#     .get_data_loader()
+
+
+# dataset = MyDataset(csv_file='mydata/train.csv')
+# train_dataloader = MyDataLoader(csv_file='mydata/train.csv', batch_size=4, max_length=256)\
+#     .get_data_loader()
+# valid_dataloader = MyDataLoader(csv_file='mydata/test.csv', batch_size=4, max_length=256)\
+#     .get_data_loader()
+# test_dataloader = MyDataLoader(csv_file='mydata/test.csv', batch_size=4, max_length=256)\
+#     .get_data_loader()
 
 # # 打印前几个样本
 # print("Printing samples from the dataset:")
@@ -50,8 +63,8 @@ d_model = 128
 n_heads = 8
 d_ff = 2048
 n_layers = 6
-model = Transformer(input_size=input_size,output_size=output_size,d_model=d_model,n_heads=n_heads,
-                    d_ff=d_ff,n_layers=n_layers).to(device)
+model = Transformer(input_size=input_size, output_size=output_size, d_model=d_model, n_heads=n_heads,
+                    d_ff=d_ff, n_layers=n_layers).to(device)
 
 
 def train_loop(dataloader, model, loss_fn, optimizer, lr_scheduler, epoch, total_loss):
@@ -104,7 +117,7 @@ def test_loop(dataloader, model, mode='Test'):
 import torch.optim as optim
 from transformers import get_scheduler
 
-learning_rate = 1e-3
+learning_rate = 1e-5
 epoch_num = 3
 
 loss_fn = nn.CrossEntropyLoss()
